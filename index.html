@@ -11,19 +11,20 @@
       <input autocomplete="one-time-code" required />
       <input type="submit" />
     </form>
-    <span id="denem"></span>
     <script>
       if ("OTPCredential" in window) {
         window.addEventListener("DOMContentLoaded", e => {
-          const den = document.getElementById("denem");
-          den.textContent = "1";
+          const input = document.querySelector(
+            'input[autocomplete="one-time-code"]'
+          );
+          if (!input) return;
           const ac = new AbortController();
-          // const form = input.closest("form");
-          // if (form) {
-          //   form.addEventListener("submit", e => {
-          //     ac.abort();
-          //   });
-          // }
+          const form = input.closest("form");
+          if (form) {
+            form.addEventListener("submit", e => {
+              ac.abort();
+            });
+          }
           navigator.credentials
             .get({
               otp: { transport: ["sms"] },
@@ -31,10 +32,10 @@
             })
             .then(otp => {
               input.value = otp.code;
-              den.textContent = 5;
+              if (form) form.submit();
             })
             .catch(err => {
-              den.textContent = 6;
+              console.log(err);
             });
         });
       }
