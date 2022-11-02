@@ -7,9 +7,14 @@
     <title>Document</title>
   </head>
   <body>
-    <form>
-      <input autocomplete="one-time-code" required />
-      <input type="submit" />
+    <form action="/verify-otp" method="POST">
+      <input
+        type="text"
+        inputmode="numeric"
+        autocomplete="one-time-code"
+        pattern="\d{6}"
+        required
+      />
     </form>
     <script>
       if ("OTPCredential" in window) {
@@ -18,13 +23,16 @@
             'input[autocomplete="one-time-code"]'
           );
           if (!input) return;
+          // Cancel the WebOTP API if the form is submitted manually.
           const ac = new AbortController();
           const form = input.closest("form");
           if (form) {
             form.addEventListener("submit", e => {
+              // Cancel the WebOTP API.
               ac.abort();
             });
           }
+          // Invoke the WebOTP API
           navigator.credentials
             .get({
               otp: { transport: ["sms"] },
@@ -32,6 +40,7 @@
             })
             .then(otp => {
               input.value = otp.code;
+              // Automatically submit the form when an OTP is obtained.
               if (form) form.submit();
             })
             .catch(err => {
