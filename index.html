@@ -31,11 +31,10 @@
             })
             .then(otp => {
               input.value = otp.code;
-              den.textContent = otp.code;
+              den.textContent = 5;
             })
             .catch(err => {
-              console.log(err);
-              den.textContent = err;
+              den.textContent = 6;
             });
         });
       }
