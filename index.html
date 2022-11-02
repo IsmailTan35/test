@@ -19,6 +19,8 @@
             'input[autocomplete="one-time-code"]'
           );
           const den = document.getElementById("denem");
+          den.textContent = "asdasd";
+
           if (!input) return;
           const ac = new AbortController();
           const form = input.closest("form");
@@ -34,7 +36,6 @@
             })
             .then(otp => {
               input.value = otp.code;
-              den.textContent = "asdasd";
               if (form) form.submit();
             })
             .catch(err => {
